@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dart Game</title>
+<style>
+    body {
+        background-color: lightskyblue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+    #game-container {
+        position: relative;
+        width: 300px;
+        height: 300px;
+    }
+    #face {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 3px solid red;
+        transition: transform 0.1s;
+    }
+    .dart {
+        position: absolute;
+        width: 40px;
+        height: 4px;
+        background: yellow;
+        pointer-events: none;
+        transition: top 0.3s linear, left 0.3s linear;
+    }
+    .dart::before {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 8px solid silver;
+        border-top: 3px solid transparent;
+        border-bottom: 3px solid transparent;
+    }
+    .dart::after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-right: 10px solid red;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+    }
+    #score {
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: bold;
+        color: navy;
+    }
+    #message {
+        margin-top: 10px;
+        font-size: 20px;
+        color: darkred;
+        font-weight: bold;
+        min-height: 24px;
+    }
+    button {
+        margin-top: 10px;
+        padding: 8px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        background: crimson;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    @keyframes shake {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        25% { transform: translate(-48%, -50%) rotate(-3deg); }
+        50% { transform: translate(-52%, -50%) rotate(3deg); }
+        75% { transform: translate(-48%, -50%) rotate(-3deg); }
+        100% { transform: translate(-50%, -50%) rotate(0deg); }
+    }
+</style>
+</head>
+<body>
+
+<h1>🎯 Revenge on irfan😈😈</h1>
+<div id="game-container">
+    <img id="face" src="yourface.jpg" alt="Face">
+</div>
+
+<div id="score">Score: 0</div>
+<div id="message"></div>
+<button onclick="throwDart()">Throw Dart</button>
+
+<!-- Funny hit sound -->
+<audio id="hit-sound" src="https://www.myinstants.com/media/sounds/cartoon-boing.mp3" preload="auto"></audio>
+
+<script>
+    let score = 0;
+
+    function throwDart() {
+        const gameContainer = document.getElementById("game-container");
+        const face = document.getElementById("face");
+        const hitSound = document.getElementById("hit-sound");
+        const messageBox = document.getElementById("message");
+
+        const dart = document.createElement("div");
+        dart.classList.add("dart");
+
+        const radius = face.width / 2 - 20;
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * radius;
+
+        const centerX = 150;
+        const centerY = 150;
+
+        const targetX = centerX + distance * Math.cos(angle) - 10;
+        const targetY = centerY + distance * Math.sin(angle) - 6;
+
+        dart.style.left = "-50px";
+        dart.style.top = targetY + "px";
+
+        gameContainer.appendChild(dart);
+
+        setTimeout(() => {
+            dart.style.left = targetX + "px";
+            dart.style.top = targetY + "px";
+        }, 50);
+
+        setTimeout(() => {
+            face.style.animation = "shake 0.3s";
+            hitSound.currentTime = 0;
+            hitSound.play();
+            score++;
+            document.getElementById("score").innerText = "Score: " + score;
+
+            // Show messages
+            if (score % 5 === 0) {
+                messageBox.innerText = "chalu le bro entha kodtav🥲";
+            } else if (score % 2 === 0) {
+                messageBox.innerText = "😭😭";
+            } else {
+                messageBox.innerText = "";
+            }
+
+        }, 350);
+
+        face.addEventListener("animationend", () => {
+            face.style.animation = "";
+        });
+    }
+</script>
+
+</body>
+</html>
